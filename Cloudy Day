@@ -1,0 +1,60 @@
+import math
+import os
+import random
+import re
+import sys
+
+
+def maximumPeople(p, x, y, r):
+    n = len(p)
+    m = len(y)
+    covered_by = [[] for _ in range(n)]
+    for i in range(m):
+        start_cover = y[i] - r[i]
+        end_cover = y[i] + r[i]
+        for j in range(n):
+            if start_cover <= x[j] <= end_cover:
+			    covered_by[j].append(i)
+    
+    total_darkness = 0
+    for i in range(n):
+        if covered_by[i]:
+            total_darkness += p[i]
+    
+    
+    min_darkness_after_removal = total_darkness
+    
+    
+    for i in range(m):
+        current_darkness = total_darkness
+        for j in range(n):
+            if i in covered_by[j]:
+                current_darkness -= p[j]
+        
+        min_darkness_after_removal = min(min_darkness_after_removal, current_darkness)
+    
+    
+    max_sunny_population = sum(p) - min_darkness_after_removal
+    
+    return max_sunny_population
+
+if __name__ == '__main__':
+    fptr = open(os.environ['OUTPUT_PATH'], 'w')
+
+    n = int(input().strip())
+
+    p = list(map(int, input().rstrip().split()))
+
+    x = list(map(int, input().rstrip().split()))
+
+    m = int(input().strip())
+
+    y = list(map(int, input().rstrip().split()))
+
+    r = list(map(int, input().rstrip().split()))
+
+    result = maximumPeople(p, x, y, r)
+
+    fptr.write(str(result) + '\n')
+
+    fptr.close()
